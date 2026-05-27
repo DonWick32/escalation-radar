@@ -1,0 +1,162 @@
+{
+  "$schema": "https://developers.reddit.com/schema/config-file.v1.json",
+  "name": "escalationradar",
+  "server": {
+    "dir": "dist/server",
+    "entry": "index.cjs"
+  },
+  "post": {
+    "dir": "dist/client",
+    "entrypoints": {
+      "default": {
+        "entry": "index.html",
+        "height": "tall"
+      }
+    }
+  },
+  "menu": {
+    "items": [
+      {
+        "label": "Open EscalationRadar dashboard",
+        "description": "Open the moderator dashboard for recent heated and chaotic threads.",
+        "location": ["subreddit"],
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/open-dashboard"
+      },
+      {
+        "label": "Check thread heat",
+        "description": "Score this discussion for escalation signals and apply the heated flair if needed.",
+        "location": ["post", "comment"],
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/check-thread-heat"
+      },
+      {
+        "label": "Mark as heated",
+        "description": "Apply the heated flair now, useful when a moderator wants to flag a thread manually.",
+        "location": ["post", "comment"],
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/mark-heated"
+      },
+      {
+        "label": "Mark as chaotic",
+        "description": "Apply the chaotic flair now for fast-moving back-and-forth threads.",
+        "location": ["post", "comment"],
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/mark-chaotic"
+      }
+    ]
+  },
+  "triggers": {
+    "onAppInstall": "/internal/triggers/on-app-install",
+    "onCommentCreate": "/internal/triggers/on-comment-create",
+    "onPostReport": "/internal/triggers/on-post-report",
+    "onCommentReport": "/internal/triggers/on-comment-report"
+  },
+  "settings": {
+    "global": {
+      "geminiApiKey": {
+        "type": "string",
+        "label": "Gemini API key",
+        "helpText": "Secret API key used for Gemini thread heat classification.",
+        "isSecret": true
+      }
+    },
+    "subreddit": {
+      "enabled": {
+        "type": "boolean",
+        "label": "Enable automatic heat detection",
+        "helpText": "When enabled, EscalationRadar scores new comments and flags heated posts automatically.",
+        "defaultValue": true
+      },
+      "heatThreshold": {
+        "type": "number",
+        "label": "Heat threshold",
+        "helpText": "Minimum score required before the app applies the heated flair. Higher values are less sensitive.",
+        "defaultValue": 5
+      },
+      "sampleSize": {
+        "type": "number",
+        "label": "Recent comments to inspect",
+        "helpText": "How many recent comments EscalationRadar should inspect per post.",
+        "defaultValue": 30
+      },
+      "lookbackMinutes": {
+        "type": "number",
+        "label": "Lookback window in minutes",
+        "helpText": "Only comments newer than this window contribute to the heat score.",
+        "defaultValue": 45
+      },
+      "flairText": {
+        "type": "string",
+        "label": "Heated flair text",
+        "helpText": "The post flair text applied when a thread crosses the heat threshold.",
+        "defaultValue": "Heated"
+      },
+      "chaoticFlairText": {
+        "type": "string",
+        "label": "Chaotic flair text",
+        "helpText": "The post flair text applied when a thread is dominated by rapid back-and-forth comments.",
+        "defaultValue": "Chaotic"
+      },
+      "chaoticThreshold": {
+        "type": "number",
+        "label": "Chaotic threshold",
+        "helpText": "Minimum score required before the app applies the chaotic flair.",
+        "defaultValue": 5
+      },
+      "chaoticCommentThreshold": {
+        "type": "number",
+        "label": "Chaotic comment threshold",
+        "helpText": "Recent comment count that contributes to chaotic thread detection.",
+        "defaultValue": 4
+      },
+      "chaoticReplyThreshold": {
+        "type": "number",
+        "label": "Chaotic reply threshold",
+        "helpText": "Number of direct replies between the same two users that contributes to chaotic thread detection.",
+        "defaultValue": 2
+      },
+      "autoCreateFlair": {
+        "type": "boolean",
+        "label": "Create reusable flair template",
+        "helpText": "When possible, create or reuse a mod-only post flair template during install and detection.",
+        "defaultValue": true
+      },
+      "useGemini": {
+        "type": "boolean",
+        "label": "Use Gemini classifier",
+        "helpText": "Use Gemini as a second-stage classifier before automatically flagging heated posts.",
+        "defaultValue": true
+      },
+      "sendAllToGemini": {
+        "type": "boolean",
+        "label": "Send every comment to Gemini",
+        "helpText": "Bypass the heuristic gate and ask Gemini to classify every new comment event.",
+        "defaultValue": false
+      },
+      "geminiModel": {
+        "type": "string",
+        "label": "Gemini model",
+        "helpText": "Gemini model used for heat classification.",
+        "defaultValue": "gemini-flash-latest"
+      }
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "permissions": {
+    "http": {
+      "domains": ["generativelanguage.googleapis.com"]
+    },
+    "reddit": {
+      "enable": true,
+      "scope": "moderator"
+    },
+    "redis": true
+  },
+  "dev": {
+    "subreddit": "escalationradar_dev"
+  }
+}

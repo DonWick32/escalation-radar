@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EscalationRadar Dashboard</title>
+    <script type="module" src="/main.ts"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Moderator dashboard</p>
+          <h1>EscalationRadar</h1>
+          <p class="subhead">r/<span id="subredditName">loading</span></p>
+        </div>
+        <button id="refreshButton" class="button" type="button">Refresh</button>
+      </header>
+
+      <nav class="dashboard-nav" aria-label="Dashboard sections">
+        <button
+          id="overviewTab"
+          class="nav-tab nav-tab--active"
+          type="button"
+          aria-controls="overviewPanel"
+          aria-selected="true"
+        >
+          Overview
+        </button>
+        <button
+          id="threadsTab"
+          class="nav-tab"
+          type="button"
+          aria-controls="threadsPanel"
+          aria-selected="false"
+        >
+          Threads
+        </button>
+        <button
+          id="settingsTab"
+          class="nav-tab"
+          type="button"
+          aria-controls="settingsPanel"
+          aria-selected="false"
+        >
+          Settings
+        </button>
+      </nav>
+
+      <section
+        id="overviewPanel"
+        class="tab-panel tab-panel--active"
+        aria-labelledby="overviewTab"
+      >
+        <section class="metrics" aria-label="Thread summary">
+          <div class="metric metric--chaotic">
+            <span class="metric__label">Chaotic</span>
+            <strong id="chaoticCount">0</strong>
+          </div>
+          <div class="metric metric--heated">
+            <span class="metric__label">Heated</span>
+            <strong id="heatedCount">0</strong>
+          </div>
+          <div class="metric">
+            <span class="metric__label">Clear</span>
+            <strong id="clearCount">0</strong>
+          </div>
+          <div class="metric">
+            <span class="metric__label">Tracked</span>
+            <strong id="totalCount">0</strong>
+          </div>
+        </section>
+
+        <section class="signal-metrics" aria-label="Conversation summary">
+          <div class="signal-card signal-card--loops">
+            <span class="signal-card__label">Reply loops</span>
+            <strong id="replyLoopCount">0</strong>
+            <span class="signal-card__note">cross-user replies</span>
+          </div>
+          <div class="signal-card signal-card--chains">
+            <span class="signal-card__label">Active chains</span>
+            <strong id="activeChainsCount">0</strong>
+            <span class="signal-card__note">back-and-forth threads</span>
+          </div>
+          <div class="signal-card signal-card--baiters">
+            <span class="signal-card__label">Rage signals</span>
+            <strong id="rageBaiterCount">0</strong>
+            <span class="signal-card__note">users or comments</span>
+          </div>
+          <div class="signal-card signal-card--velocity">
+            <span class="signal-card__label">Velocity spikes</span>
+            <strong id="velocitySpikeCount">0</strong>
+            <span class="signal-card__note">comment bursts</span>
+          </div>
+        </section>
+
+        <section class="chart-grid" aria-label="Moderation graphs">
+          <section class="panel chart-panel">
+            <div class="panel__header">
+              <h2>Decision mix</h2>
+              <span id="decisionTotalLabel" class="panel-stat">0 tracked</span>
+            </div>
+            <div id="decisionMixChart" class="stacked-chart"></div>
+          </section>
+
+          <section class="panel chart-panel">
+            <div class="panel__header">
+              <h2>Workflow queue</h2>
+            </div>
+            <div id="workflowChart" class="chart-list"></div>
+          </section>
+
+          <section class="panel chart-panel">
+            <div class="panel__header">
+              <h2>Conversation pressure</h2>
+            </div>
+            <div id="signalChart" class="chart-list"></div>
+          </section>
+
+          <section class="panel chart-panel">
+            <div class="panel__header">
+              <h2>Dominant patterns</h2>
+            </div>
+            <div id="patternChart" class="chart-list"></div>
+          </section>
+        </section>
+      </section>
+
+      <section
+        id="threadsPanel"
+        class="tab-panel"
+        aria-labelledby="threadsTab"
+        hidden
+      >
+        <section class="panel">
+          <div class="panel__header">
+            <h2>Recent threads</h2>
+            <div class="segments" role="group" aria-label="Thread filter">
+              <button
+                class="segment segment--active"
+                id="flaggedFilter"
+                type="button"
+              >
+                Flagged
+              </button>
+              <button class="segment" id="allFilter" type="button">All</button>
+            </div>
+          </div>
+          <div class="bulk-toolbar" aria-label="Bulk triage actions">
+            <label class="bulk-select">
+              <input id="bulkSelectAll" type="checkbox" />
+              <span>Select visible</span>
+            </label>
+            <span id="bulkSelectedCount" class="bulk-count">0 selected</span>
+            <div class="bulk-actions">
+              <button
+                id="bulkAcknowledgeButton"
+                class="action-button"
+                type="button"
+              >
+                Acknowledge
+              </button>
+              <button
+                id="bulkResolveButton"
+                class="action-button"
+                type="button"
+              >
+                Resolve
+              </button>
+              <button id="bulkIgnoreButton" class="action-button" type="button">
+                Ignore 1h
+              </button>
+              <button id="bulkReopenButton" class="action-button" type="button">
+                Reopen
+              </button>
+              <button
+                id="bulkClearSelectionButton"
+                class="action-button"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+          <div id="incidentList" class="incident-list" aria-live="polite"></div>
+        </section>
+      </section>
+
+      <section
+        id="settingsPanel"
+        class="tab-panel"
+        aria-labelledby="settingsTab"
+        hidden
+      >
+        <section class="panel settings-panel">
+          <div class="panel__header">
+            <h2>Detection settings</h2>
+            <button id="saveConfigButton" class="button" type="button">
+              Save settings
+            </button>
+          </div>
+          <div class="settings-grid">
+            <label class="field">
+              <span>Velocity window</span>
+              <input
+                id="velocityWindowMinutes"
+                type="number"
+                min="1"
+                max="60"
+              />
+            </label>
+            <label class="field">
+              <span>Baseline window</span>
+              <input
+                id="baselineWindowMinutes"
+                type="number"
+                min="5"
+                max="240"
+              />
+            </label>
+            <label class="field">
+              <span>Z-threshold</span>
+              <input
+                id="velocityZThreshold"
+                type="number"
+                min="0.5"
+                max="10"
+                step="0.1"
+              />
+            </label>
+            <label class="field">
+              <span>Minimum comments</span>
+              <input
+                id="minimumCommentsInWindow"
+                type="number"
+                min="1"
+                max="100"
+              />
+            </label>
+            <label class="field">
+              <span>Unique commenters</span>
+              <input
+                id="uniqueCommenterThreshold"
+                type="number"
+                min="1"
+                max="100"
+              />
+            </label>
+            <label class="field">
+              <span>Flair TTL</span>
+              <input id="flairTtlMinutes" type="number" min="5" max="1440" />
+            </label>
+            <label class="field">
+              <span>Rage bait replies</span>
+              <input
+                id="rageBaitReplyThreshold"
+                type="number"
+                min="2"
+                max="50"
+              />
+            </label>
+            <label class="field field--checkbox">
+              <span>User ragebait flair</span>
+              <input id="rageBaiterUserFlairEnabled" type="checkbox" />
+            </label>
+            <label class="field">
+              <span>User flair text</span>
+              <input id="rageBaiterUserFlairText" type="text" maxlength="32" />
+            </label>
+          </div>
+        </section>
+
+        <section class="panel helper-panel">
+          <div class="panel__header">
+            <h2>Workflow buttons</h2>
+          </div>
+          <div class="workflow-help">
+            <span>Acknowledge: seen by a mod.</span>
+            <span>Resolve: handled and hidden from flagged triage.</span>
+            <span>Ignore 1h: mute temporarily.</span>
+            <span>Reopen: send back to active triage.</span>
+          </div>
+        </section>
+      </section>
+
+      <p id="statusLine" class="status">Loading dashboard data...</p>
+    </main>
+  </body>
+</html>
