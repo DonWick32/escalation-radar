@@ -11,7 +11,8 @@ The app is designed as an early-warning system, not an enforcement bot. It helps
 
 ## Demo Video
 
-Start here: [Watch the EscalationRadar demo on YouTube](https://youtu.be/_TKuSqt8TWc?si=oAwFHJNA0MJt_X5y).
+*(Click the image below to play the demo video)*<br/>
+[![EscalationRadar Demo Video](https://img.youtube.com/vi/_TKuSqt8TWc/maxresdefault.jpg)](https://youtu.be/_TKuSqt8TWc?si=oAwFHJNA0MJt_X5y)
 
 ## Contents
 
