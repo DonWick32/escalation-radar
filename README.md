@@ -17,7 +17,7 @@ Start here: [Watch the EscalationRadar demo on YouTube](https://youtu.be/_TKuSqt
 
 - [Demo Video](#demo-video)
 - [What Exists Today](#what-exists-today)
-- [UI Placeholders](#ui-placeholders)
+- [Screenshots](#screenshots)
 - [Moderator Workflow](#moderator-workflow)
 - [Architecture](#architecture)
 - [Detection Engine](#detection-engine)
@@ -54,41 +54,35 @@ EscalationRadar watches Reddit comment and report events and scores the parent p
 | Redis persistence | Stores dashboard incidents for seven days and score timelines for recent checks. |
 | Moderator-only API | Dashboard and workflow APIs verify the current viewer is a subreddit moderator. |
 
-## UI Placeholders
+## Screenshots
 
-Use these slots when screenshots are available. Keep image names stable so the README can be updated by dropping files into `docs/screenshots/`.
+These screenshots show the current Devvit dashboard experience.
 
 ### Dashboard Overview
 
-<!-- Replace this placeholder with docs/screenshots/dashboard-overview.png -->
+![EscalationRadar dashboard overview](docs/screenshots/dashboard-overview.png)
 
-| Screenshot placeholder | What to capture |
-|---|---|
-| `docs/screenshots/dashboard-overview.png` | Overview tab with summary metrics, decision mix, workflow queue, conversation pressure, and dominant patterns. |
+### Dashboard Analytics
+
+![EscalationRadar overview analytics](docs/screenshots/dashboard-analytics.png)
 
 ### Thread Triage
 
-<!-- Replace this placeholder with docs/screenshots/thread-triage.png -->
+![EscalationRadar thread triage list](docs/screenshots/thread-triage.png)
 
-| Screenshot placeholder | What to capture |
-|---|---|
-| `docs/screenshots/thread-triage.png` | Threads tab with flagged incidents, score metadata, reasons, interaction graph, score trend, and workflow buttons. |
+### Thread Detail
+
+![EscalationRadar thread detail with interaction graph](docs/screenshots/thread-detail.png)
 
 ### Detection Settings
 
-<!-- Replace this placeholder with docs/screenshots/detection-settings.png -->
-
-| Screenshot placeholder | What to capture |
-|---|---|
-| `docs/screenshots/detection-settings.png` | Settings tab showing velocity, baseline, TTL, rage-bait, and user flair controls. |
+![EscalationRadar detection settings](docs/screenshots/detection-settings.png)
 
 ### Reddit Flair Result
 
-<!-- Replace this placeholder with docs/screenshots/reddit-flair-result.png -->
+Placeholder for a future Reddit post screenshot after EscalationRadar applies the `Heated` or `Chaotic` flair:
 
-| Screenshot placeholder | What to capture |
-|---|---|
-| `docs/screenshots/reddit-flair-result.png` | A Reddit post after EscalationRadar applies the `Heated` or `Chaotic` flair. |
+`docs/screenshots/reddit-flair-result.png`
 
 ## Moderator Workflow
 

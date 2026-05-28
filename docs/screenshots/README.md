@@ -1,8 +1,13 @@
-# Screenshot Placeholders
+# Screenshots
 
-Drop UI screenshots here using the filenames referenced by the main README:
+Screenshots used by the main README:
 
 - `dashboard-overview.png`
+- `dashboard-analytics.png`
 - `thread-triage.png`
+- `thread-detail.png`
 - `detection-settings.png`
+
+Future placeholder:
+
 - `reddit-flair-result.png`
